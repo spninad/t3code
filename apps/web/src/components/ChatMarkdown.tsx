@@ -97,6 +97,7 @@ import { parseThreadLinkHref } from "@t3tools/shared/threadLinks";
 import { AssistantCitationChip } from "./chat/AssistantCitationChip";
 import { MarkdownThreadLink } from "./chat/MarkdownThreadLink";
 import { mathKind } from "@t3tools/shared/markdownMath";
+import { richPreviewKind } from "@t3tools/shared/markdownPreview";
 import remarkMath from "remark-math";
 import {
   artifactTemplateFromHastProperties,
@@ -193,6 +194,7 @@ import { MarkdownCodeBlock, SuspenseShikiCodeBlock } from "./chat/MarkdownCodeBl
 import { createMarkdownRenderer } from "./chat/markdownRenderer";
 import { splitMarkdownBlocks } from "./chat/markdownStreamBlocks";
 import { MarkdownMermaidCodeBlock } from "./chat/MarkdownMermaidCodeBlock";
+import { MarkdownRichPreview } from "./chat/MarkdownRichPreview";
 import { MarkdownTable } from "./chat/MarkdownTable";
 import { MarkdownDetails } from "./chat/MarkdownDetails";
 import {
@@ -1627,6 +1629,21 @@ const CHAT_MARKDOWN_COMPONENTS = {
         >
           {highlightedCode}
         </MarkdownMermaidCodeBlock>
+      );
+    }
+    const richKind = inline ? null : richPreviewKind(language);
+    if (richKind && isClosedCodeFence(node, text, codeBlock.code)) {
+      return (
+        <MarkdownRichPreview
+          code={codeBlock.code}
+          kind={richKind}
+          language={language}
+          fenceTitle={fenceTitle}
+          theme={resolvedTheme}
+          isStreaming={isStreaming}
+        >
+          {highlightedCode}
+        </MarkdownRichPreview>
       );
     }
     return (

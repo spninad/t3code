@@ -417,6 +417,49 @@ describe("ChatMarkdown headings", () => {
   });
 });
 
+describe("ChatMarkdown rich previews", () => {
+  it("renders closed SVG and HTML fences and keeps an open fence as code", async () => {
+    setup();
+    const message = (text: string, isStreaming = false) => (
+      <ChatMarkdown cwd="/tmp/project" text={text} isStreaming={isStreaming} />
+    );
+    await using screen = await render(
+      message(
+        [
+          "```svg",
+          '<svg viewBox="0 0 10 10"><circle cx="2" cy="2" r="1" fill="red"/><script>alert(1)</script></svg>',
+          "```",
+          "",
+          "```html",
+          '<b>Preview text</b><img src="https://evil.test/a.png" onerror="alert(1)">',
+          "```",
+          "",
+          "```html",
+          "<b>Still streaming",
+        ].join("\n"),
+        true,
+      ),
+    );
+    const { container, rerender } = screen;
+    const frames = () => [...container.querySelectorAll("iframe")];
+    expect(frames()).toHaveLength(2);
+    expect(frames()[0]?.getAttribute("sandbox")).toBe("allow-same-origin");
+    expect(frames()[0]?.srcdoc).toContain("<circle");
+    expect(frames()[0]?.srcdoc).not.toContain("<script");
+    expect(frames()[0]?.srcdoc).not.toContain("alert");
+    expect(frames()[1]?.srcdoc).toContain("Preview text");
+    expect(frames()[1]?.srcdoc).not.toContain("evil.test");
+    expect(frames()[1]?.srcdoc).not.toContain("onerror");
+    expect(container.textContent).toContain("Still streaming");
+
+    await userEvent.click(buttonsLabelled(container, "Show code")[0]!);
+    expect(frames()).toHaveLength(1);
+
+    await rerender(message("```html\n<b>Still streaming"));
+    expect(container.querySelector("iframe")).toBeNull();
+  });
+});
+
 describe("ChatMarkdown inline code selection", () => {
   it("selects the whole inline code span on double-click, but only a word in fenced code", async () => {
     setup();

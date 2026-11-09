@@ -41,6 +41,18 @@ exporting a table preserves the TeX.
 The composer keeps TeX source editable, including when rich text is enabled. The Render math
 preference is saved separately on each device.
 
+## Diagrams, SVG, and HTML
+
+On web and desktop, a fenced `mermaid` block renders as a diagram. A fenced `svg` or `html`
+block renders in the message. Each preview has a control to show the source again.
+
+These previews do not run scripts, and they do not load remote images, style sheets, or other
+network resources. A link in an HTML preview is shown as text. Its address is in the source.
+A page an agent publishes as a visual reply is separate. See [Visual replies](html-renders.md).
+
+Mobile renders SVG and HTML fences in the thread. Mermaid fences stay as source there. LaTeX
+on mobile follows **Render math**.
+
 ## Motion
 
 The main sidebar, right panel, and terminal drawer open and close immediately by default. Move the

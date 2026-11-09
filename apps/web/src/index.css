@@ -2033,6 +2033,14 @@ code {
   display: inline-block;
 }
 
+.chat-markdown-rich-frame {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color-scheme: light dark;
+}
+
 .chat-markdown a {
   text-decoration: none;
 }
@@ -2208,7 +2216,8 @@ code {
 @media (prefers-reduced-motion: no-preference) {
   .chat-markdown[data-streaming] > *,
   .chat-markdown[data-streaming] .chat-markdown-shiki,
-  .chat-markdown[data-streaming] .chat-markdown-mermaid {
+  .chat-markdown[data-streaming] .chat-markdown-mermaid,
+  .chat-markdown[data-streaming] .chat-markdown-rich-preview {
     transition: opacity 600ms ease-out;
 
     @starting-style {

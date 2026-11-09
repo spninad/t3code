@@ -590,7 +590,7 @@ function UserTimelineRow({ row }: { row: Extract<TimelineRow, { kind: "message" 
       container.appendChild(selection.getRangeAt(index).cloneContents());
       // Diagram source is copied text, not authority to export context records.
       for (const element of container.querySelectorAll(
-        "[data-markdown-copy]:not([data-markdown-mermaid])",
+        "[data-markdown-copy]:not([data-markdown-mermaid], [data-markdown-rendered-block])",
       )) {
         copiedMarkdown.push(element.getAttribute("data-markdown-copy") ?? "");
       }

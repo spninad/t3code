@@ -18,7 +18,8 @@ function inertNotebookMarkdown() {
         return [{ type: "text", value: node.alt ?? "" }];
       if (node.type === "link" || node.type === "linkReference") return clean(node.children);
       if (node.type === "inlineCode") return [{ type: "text", value: node.value }];
-      if (node.type === "code" && node.lang === "mermaid") return [{ ...node, lang: "text" }];
+      if (node.type === "code" && node.lang && /^(?:mermaid|svg|html|htm)$/i.test(node.lang))
+        return [{ ...node, lang: "text" }];
       if ("children" in node) node.children = clean(node.children) as typeof node.children;
       return [node];
     });
