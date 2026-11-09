@@ -375,6 +375,8 @@ export function serializeTableElementToCsv(table: Element): string {
   return lines.join("\n");
 }
 
+const RENDERED_BLOCK_SELECTOR = "[data-markdown-rendered-block], [data-markdown-mermaid]";
+
 function mermaidSourceHtml(source: string) {
   const pre = document.createElement("pre");
   const code = document.createElement("code");
@@ -393,7 +395,7 @@ function mathSourceElement(wrapper: Element): Element {
 }
 
 function sanitizedHtmlFrom(container: Element): string {
-  for (const diagram of container.querySelectorAll("[data-markdown-mermaid]")) {
+  for (const diagram of container.querySelectorAll(RENDERED_BLOCK_SELECTOR)) {
     const source = diagram.getAttribute("data-markdown-copy");
     if (source !== null) diagram.replaceChildren(mermaidSourceHtml(source));
   }
@@ -429,7 +431,7 @@ export function chatMarkdownClipboardPayload(
     const ancestorElement =
       ancestor.nodeType === Node.ELEMENT_NODE ? (ancestor as Element) : ancestor.parentElement;
     const diagramSource = ancestorElement
-      ?.closest("[data-markdown-mermaid]")
+      ?.closest(RENDERED_BLOCK_SELECTOR)
       ?.getAttribute("data-markdown-copy");
     if (diagramSource != null) {
       const text = diagramSource.trim();

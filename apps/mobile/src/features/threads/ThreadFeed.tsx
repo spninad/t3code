@@ -154,6 +154,7 @@ import { scopedThreadKey } from "../../lib/scopedEntities";
 import { copyTextWithHaptic } from "../../lib/copyTextWithHaptic";
 import { downloadAndShareAttachment } from "../../lib/attachmentDownload";
 import { splitMarkdownDetails } from "../../lib/markdownDetails";
+import { ChatRichMarkdown } from "./ChatRichMarkdown";
 import { hasWideMarkdownBlock } from "../../lib/wideMarkdownBlocks";
 import {
   SelectableMarkdownText,
@@ -1247,13 +1248,18 @@ function AssistantMarkdownBlocks(props: {
       }
       if (segment.markdown.trim().length === 0) return null;
       return (
-        <SelectableMarkdownText
+        <ChatRichMarkdown
           key={`markdown:${offset}`}
           markdown={renderCodexInlineDirectivesAsMarkdown(segment.markdown)}
-          skills={props.skills}
-          textStyle={props.markdownStyles.nativeTextStyle}
-          {...props.linkHandlers}
-          renderImage={props.renderImage}
+          renderMarkdown={(markdown) => (
+            <SelectableMarkdownText
+              markdown={markdown}
+              skills={props.skills}
+              textStyle={props.markdownStyles.nativeTextStyle}
+              {...props.linkHandlers}
+              renderImage={props.renderImage}
+            />
+          )}
         />
       );
     });
@@ -2491,14 +2497,19 @@ function UserMessageMarkdownContent(props: UserMessageContentProps) {
     : undefined;
   if (!hasReviewComment) {
     return (
-      <SelectableMarkdownText
+      <ChatRichMarkdown
         markdown={text}
-        contextClipboardFragment={contextClipboardFragment}
-        skills={props.skills}
-        textStyle={props.markdownStyles.nativeTextStyle}
-        preserveSoftBreaks
-        {...props.linkHandlers}
-        renderImage={props.renderImage}
+        renderMarkdown={(markdown) => (
+          <SelectableMarkdownText
+            markdown={markdown}
+            contextClipboardFragment={contextClipboardFragment}
+            skills={props.skills}
+            textStyle={props.markdownStyles.nativeTextStyle}
+            preserveSoftBreaks
+            {...props.linkHandlers}
+            renderImage={props.renderImage}
+          />
+        )}
       />
     );
   }
@@ -2522,15 +2533,20 @@ function UserMessageMarkdownContent(props: UserMessageContentProps) {
         }
 
         return (
-          <SelectableMarkdownText
+          <ChatRichMarkdown
             key={segment.id}
             markdown={text}
-            contextClipboardFragment={contextClipboardFragment}
-            skills={props.skills}
-            textStyle={props.markdownStyles.nativeTextStyle}
-            preserveSoftBreaks
-            {...props.linkHandlers}
-            renderImage={props.renderImage}
+            renderMarkdown={(markdown) => (
+              <SelectableMarkdownText
+                markdown={markdown}
+                contextClipboardFragment={contextClipboardFragment}
+                skills={props.skills}
+                textStyle={props.markdownStyles.nativeTextStyle}
+                preserveSoftBreaks
+                {...props.linkHandlers}
+                renderImage={props.renderImage}
+              />
+            )}
           />
         );
       })}
